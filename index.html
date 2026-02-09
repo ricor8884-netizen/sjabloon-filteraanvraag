@@ -1,190 +1,236 @@
-<!doctype html>
-<html lang="nl">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Filter aanvraag - Luchtlaboratorium</title>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <main class="page">
-      <header>
-        <h1>Filteraanvraag luchtlaboratorium</h1>
-        <p>Vul het formulier in om een filteraanvraag te versturen naar het laboratorium.</p>
-      </header>
-
-      <form class="request-form" id="filter-aanvraag-form">
-        <section>
-          <h2>Gegevens opdrachtgever</h2>
-          <div class="field-grid">
-            <label>
-              Bedrijf
-              <input type="text" name="bedrijf" required />
-            </label>
-            <label>
-              Afdeling
-              <input type="text" name="afdeling" required />
-            </label>
-            <label>
-              Postadres
-              <input type="text" name="postadres" required />
-            </label>
-            <label>
-              Postcode
-              <input type="text" name="postcode" required />
-            </label>
-            <label>
-              Plaats
-              <input type="text" name="plaats" required />
-            </label>
-          </div>
-        </section>
-
-        <section>
-          <h2>Uitvoering meting</h2>
-          <div class="field-grid">
-            <label>
-              Vermoedelijke datum uitvoering meting
-              <input type="date" name="datum_meting" required />
-            </label>
-          </div>
-        </section>
-
-        <section>
-          <h2>Filter specificaties</h2>
-          <div class="field-grid">
-            <label>
-              Welke filters
-              <select name="filters" required>
-                <option value="">Maak een keuze</option>
-                <option value="kwartsvezel">Kwartsvezel</option>
-                <option value="glasvezel">Glasvezel</option>
-                <option value="teflon-ptfe">Teflon (PTFE)</option>
-                <option value="pvc">PVC</option>
-                <option value="membraan">Membraan</option>
-              </select>
-            </label>
-            <label>
-              Formaat
-              <select name="formaat" required>
-                <option value="">Maak een keuze</option>
-                <option value="25mm">25 mm</option>
-                <option value="50mm">50 mm</option>
-              </select>
-            </label>
-            <label>
-              Hoeveelheid
-              <input type="number" name="hoeveelheid" min="1" required />
-            </label>
-            <fieldset class="inline-fieldset">
-              <legend>Voor gewogen</legend>
-              <label>
-                <input type="radio" name="voor_gewogen" value="ja" required />
-                Ja
-              </label>
-              <label>
-                <input type="radio" name="voor_gewogen" value="nee" />
-                Nee
-              </label>
-            </fieldset>
-          </div>
-        </section>
-
-        <section>
-          <h2>Projectgegevens</h2>
-          <div class="field-grid">
-            <label>
-              Projectnummer
-              <input type="text" name="projectnummer" required />
-            </label>
-            <label>
-              Paraaf aanvrager
-              <input type="text" name="paraaf_aanvrager" required />
-            </label>
-          </div>
-        </section>
-
-        <section>
-          <h2>Laboratorium</h2>
-          <p class="hint">In te vullen door de laborant.</p>
-          <div class="field-grid">
-            <label>
-              Naam laborant
-              <input type="text" name="laborant_naam" />
-            </label>
-            <label>
-              Datum
-              <input type="date" name="laborant_datum" />
-            </label>
-            <label>
-              Paraaf
-              <input type="text" name="laborant_paraaf" />
-            </label>
-            <label>
-              Identificatie opdracht
-              <input type="text" name="identificatie_opdracht" />
-            </label>
-          </div>
-        </section>
-
-        <footer class="form-actions">
-          <button type="submit">Open e-mail</button>
-          <button type="button" class="secondary" id="download-aanvraag">Download aanvraag</button>
-        </footer>
-      </form>
-      <script>
-        const form = document.getElementById("filter-aanvraag-form");
-        const downloadButton = document.getElementById("download-aanvraag");
-
-        const buildLines = () => {
-          const formData = new FormData(form);
-          const lines = [];
-
-          for (const [key, value] of formData.entries()) {
-            const label = key.replace(/_/g, " ");
-            lines.push(`${label}: ${value}`);
-          }
-
-          return lines;
-        };
-
-        form.addEventListener("submit", (event) => {
-          event.preventDefault();
-
-          if (!form.checkValidity()) {
-            form.reportValidity();
-            return;
-          }
-
-          const lines = buildLines();
-          const subject = encodeURIComponent("Filteraanvraag laboratorium");
-          const body = encodeURIComponent(lines.join("\n"));
-          const mailto = `mailto:rico.rappard@buroblauw.nl?subject=${subject}&body=${body}`;
-
-          window.location.href = mailto;
-        });
-
-        downloadButton.addEventListener("click", () => {
-          if (!form.checkValidity()) {
-            form.reportValidity();
-            return;
-          }
-
-          const lines = buildLines();
-          const blob = new Blob([lines.join("\n")], { type: "text/plain" });
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement("a");
-          const date = new Date().toISOString().slice(0, 10);
-
-          link.href = url;
-          link.download = `filteraanvraag-${date}.txt`;
-          document.body.appendChild(link);
-          link.click();
-          link.remove();
-          URL.revokeObjectURL(url);
-        });
-      </script>
-    </main>
-  </body>
-</html>
-</html>
+ (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
+diff --git a/index.html b/index.html
+new file mode 100644
+index 0000000000000000000000000000000000000000..4ef1edc3bb3b7ffb4af002ed804767c535a67ab5
+--- /dev/null
++++ b/index.html
+@@ -0,0 +1,226 @@
++<!doctype html>
++<html lang="nl">
++  <head>
++    <meta charset="utf-8" />
++    <meta name="viewport" content="width=device-width, initial-scale=1" />
++    <title>Filter aanvraag - Luchtlaboratorium</title>
++    <link rel="stylesheet" href="styles.css" />
++  </head>
++  <body>
++    <main class="page">
++      <header>
++        <h1>Filteraanvraag luchtlaboratorium</h1>
++        <p>Vul het formulier in om een filteraanvraag te versturen naar het laboratorium.</p>
++      </header>
++
++      <form class="request-form" id="filter-aanvraag-form">
++        <section>
++          <h2>Gegevens opdrachtgever</h2>
++          <div class="field-grid">
++            <label>
++              Bedrijf
++              <input type="text" name="bedrijf" required />
++            </label>
++            <label>
++              Afdeling
++              <input type="text" name="afdeling" required />
++            </label>
++            <label>
++              Postadres
++              <input type="text" name="postadres" required />
++            </label>
++            <label>
++              Postcode
++              <input type="text" name="postcode" required />
++            </label>
++            <label>
++              Plaats
++              <input type="text" name="plaats" required />
++            </label>
++          </div>
++        </section>
++
++        <section>
++          <h2>Uitvoering meting</h2>
++          <div class="field-grid">
++            <label>
++              Vermoedelijke datum uitvoering meting
++              <input type="date" name="datum_meting" required />
++            </label>
++          </div>
++        </section>
++
++        <section>
++          <h2>Filter specificaties</h2>
++          <div class="field-grid">
++            <label>
++              Welke filters
++              <select name="filters" required>
++                <option value="">Maak een keuze</option>
++                <option value="kwartsvezel">Kwartsvezel</option>
++                <option value="glasvezel">Glasvezel</option>
++                <option value="teflon-ptfe">Teflon (PTFE)</option>
++                <option value="pvc">PVC</option>
++                <option value="membraan">Membraan</option>
++              </select>
++            </label>
++            <label>
++              Formaat
++              <select name="formaat" required>
++                <option value="">Maak een keuze</option>
++                <option value="25mm">25 mm</option>
++                <option value="50mm">50 mm</option>
++              </select>
++            </label>
++            <label>
++              Hoeveelheid
++              <input type="number" name="hoeveelheid" min="1" required />
++            </label>
++            <fieldset class="inline-fieldset">
++              <legend>Voor gewogen</legend>
++              <label>
++                <input type="radio" name="voor_gewogen" value="ja" required />
++                Ja
++              </label>
++              <label>
++                <input type="radio" name="voor_gewogen" value="nee" />
++                Nee
++              </label>
++            </fieldset>
++          </div>
++        </section>
++
++        <section>
++          <h2>Projectgegevens</h2>
++          <div class="field-grid">
++            <label>
++              Projectnummer
++              <input type="text" name="projectnummer" required />
++            </label>
++            <label>
++              Paraaf aanvrager
++              <input type="text" name="paraaf_aanvrager" required />
++            </label>
++          </div>
++        </section>
++
++        <section>
++          <h2>Laboratorium</h2>
++          <p class="hint">In te vullen door de laborant.</p>
++          <div class="field-grid">
++            <label>
++              Naam laborant
++              <input type="text" name="laborant_naam" />
++            </label>
++            <label>
++              Datum
++              <input type="date" name="laborant_datum" />
++            </label>
++            <label>
++              Paraaf
++              <input type="text" name="laborant_paraaf" />
++            </label>
++            <label>
++              Identificatie opdracht
++              <input type="text" name="identificatie_opdracht" />
++            </label>
++          </div>
++        </section>
++
++        <footer class="form-actions">
++          <button type="submit">Open e-mail</button>
++          <button type="button" class="secondary" id="download-aanvraag">Download aanvraag</button>
++          <button type="button" class="secondary" id="download-vbs">Download VBS</button>
++        </footer>
++      </form>
++      <script>
++        const form = document.getElementById("filter-aanvraag-form");
++        const downloadButton = document.getElementById("download-aanvraag");
++        const downloadVbsButton = document.getElementById("download-vbs");
++
++        const buildLines = () => {
++          const formData = new FormData(form);
++          const lines = [];
++
++          for (const [key, value] of formData.entries()) {
++            const label = key.replace(/_/g, " ");
++            lines.push(`${label}: ${value}`);
++          }
++
++          return lines;
++        };
++
++        const buildVbs = (lines) => {
++          const body = lines.join("\n").replace(/\"/g, '""');
++          const subject = "Filteraanvraag laboratorium";
++
++          return [
++            'Set shell = CreateObject("WScript.Shell")',
++            'mail = "mailto:rico.rappard@buroblauw.nl?subject=' +
++              encodeURIComponent(subject) +
++              '&body=' +
++              encodeURIComponent(body) +
++              '"',
++            'shell.Run mail',
++          ].join("\r\n");
++        };
++
++        form.addEventListener("submit", (event) => {
++          event.preventDefault();
++
++          if (!form.checkValidity()) {
++            form.reportValidity();
++            return;
++          }
++
++          const lines = buildLines();
++          const subject = encodeURIComponent("Filteraanvraag laboratorium");
++          const body = encodeURIComponent(lines.join("\n"));
++          const mailto = `mailto:rico.rappard@buroblauw.nl?subject=${subject}&body=${body}`;
++
++          window.location.href = mailto;
++        });
++
++        downloadButton.addEventListener("click", () => {
++          if (!form.checkValidity()) {
++            form.reportValidity();
++            return;
++          }
++
++          const lines = buildLines();
++          const blob = new Blob([lines.join("\n")], { type: "text/plain" });
++          const url = URL.createObjectURL(blob);
++          const link = document.createElement("a");
++          const date = new Date().toISOString().slice(0, 10);
++
++          link.href = url;
++          link.download = `filteraanvraag-${date}.txt`;
++          document.body.appendChild(link);
++          link.click();
++          link.remove();
++          URL.revokeObjectURL(url);
++        });
++
++        downloadVbsButton.addEventListener("click", () => {
++          if (!form.checkValidity()) {
++            form.reportValidity();
++            return;
++          }
++
++          const lines = buildLines();
++          const blob = new Blob([buildVbs(lines)], { type: "text/vbscript" });
++          const url = URL.createObjectURL(blob);
++          const link = document.createElement("a");
++          const date = new Date().toISOString().slice(0, 10);
++
++          link.href = url;
++          link.download = `filteraanvraag-${date}.vbs`;
++          document.body.appendChild(link);
++          link.click();
++          link.remove();
++          URL.revokeObjectURL(url);
++        });
++      </script>
++    </main>
++  </body>
++</html>
+ 
+EOF
+)
