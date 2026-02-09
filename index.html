@@ -3,22 +3,20 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Filteraanvraag - Luchtlaboratorium</title>
+    <title>Filter aanvraag - Luchtlaboratorium</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <main class="page">
-      <header class="page__header">
-        <h1>Filteraanvraag</h1>
-        <p>
-          Vul dit formulier in voor een filteraanvraag bij het luchtlaboratorium.
-        </p>
+      <header>
+        <h1>Filteraanvraag luchtlaboratorium</h1>
+        <p>Vul het formulier in om een filteraanvraag te versturen naar het laboratorium.</p>
       </header>
 
-      <form id="filterRequestForm" class="card">
-        <section class="section">
+      <form class="request-form" id="filter-aanvraag-form">
+        <section>
           <h2>Gegevens opdrachtgever</h2>
-          <div class="grid">
+          <div class="field-grid">
             <label>
               Bedrijf
               <input type="text" name="bedrijf" required />
@@ -27,7 +25,7 @@
               Afdeling
               <input type="text" name="afdeling" required />
             </label>
-            <label class="grid__span">
+            <label>
               Postadres
               <input type="text" name="postadres" required />
             </label>
@@ -42,30 +40,26 @@
           </div>
         </section>
 
-        <section class="section">
-          <h2>Meting</h2>
-          <div class="grid">
+        <section>
+          <h2>Uitvoering meting</h2>
+          <div class="field-grid">
             <label>
               Vermoedelijke datum uitvoering meting
-              <input type="date" name="meting_datum" required />
-            </label>
-            <label>
-              Projectnummer
-              <input type="text" name="projectnummer" required />
+              <input type="date" name="datum_meting" required />
             </label>
           </div>
         </section>
 
-        <section class="section">
-          <h2>Filterdetails</h2>
-          <div class="grid">
+        <section>
+          <h2>Filter specificaties</h2>
+          <div class="field-grid">
             <label>
               Welke filters
-              <select name="filter_type" required>
+              <select name="filters" required>
                 <option value="">Maak een keuze</option>
                 <option value="kwartsvezel">Kwartsvezel</option>
                 <option value="glasvezel">Glasvezel</option>
-                <option value="teflon">Teflon (PTFE)</option>
+                <option value="teflon-ptfe">Teflon (PTFE)</option>
                 <option value="pvc">PVC</option>
                 <option value="membraan">Membraan</option>
               </select>
@@ -74,26 +68,34 @@
               Formaat
               <select name="formaat" required>
                 <option value="">Maak een keuze</option>
-                <option value="25 mm">25 mm</option>
-                <option value="50 mm">50 mm</option>
+                <option value="25mm">25 mm</option>
+                <option value="50mm">50 mm</option>
               </select>
             </label>
             <label>
               Hoeveelheid
               <input type="number" name="hoeveelheid" min="1" required />
             </label>
-            <label class="inline">
-              Voor gewogen
-              <div class="radio-group">
-                <label>
-                  <input type="radio" name="voor_gewogen" value="ja" required />
-                  Ja
-                </label>
-                <label>
-                  <input type="radio" name="voor_gewogen" value="nee" required />
-                  Nee
-                </label>
-              </div>
+            <fieldset class="inline-fieldset">
+              <legend>Voor gewogen</legend>
+              <label>
+                <input type="radio" name="voor_gewogen" value="ja" required />
+                Ja
+              </label>
+              <label>
+                <input type="radio" name="voor_gewogen" value="nee" />
+                Nee
+              </label>
+            </fieldset>
+          </div>
+        </section>
+
+        <section>
+          <h2>Projectgegevens</h2>
+          <div class="field-grid">
+            <label>
+              Projectnummer
+              <input type="text" name="projectnummer" required />
             </label>
             <label>
               Paraaf aanvrager
@@ -102,11 +104,12 @@
           </div>
         </section>
 
-        <section class="section">
-          <h2>Laborant (invullen na ontvangst)</h2>
-          <div class="grid">
+        <section>
+          <h2>Laboratorium</h2>
+          <p class="hint">In te vullen door de laborant.</p>
+          <div class="field-grid">
             <label>
-              Naam
+              Naam laborant
               <input type="text" name="laborant_naam" />
             </label>
             <label>
@@ -117,24 +120,71 @@
               Paraaf
               <input type="text" name="laborant_paraaf" />
             </label>
-            <label class="grid__span">
+            <label>
               Identificatie opdracht
-              <input type="text" name="opdracht_identificatie" />
+              <input type="text" name="identificatie_opdracht" />
             </label>
           </div>
         </section>
 
-        <section class="section section--actions">
-          <button type="button" id="sendEmailButton" class="primary">
-            Verstuur naar laborant
-          </button>
-          <p class="helper">
-            De aanvraag wordt verstuurd naar <strong>rico.rappard@buroblauw.nl</strong>.
-          </p>
-        </section>
+        <footer class="form-actions">
+          <button type="submit">Open e-mail</button>
+          <button type="button" class="secondary" id="download-aanvraag">Download aanvraag</button>
+        </footer>
       </form>
-    </main>
+      <script>
+        const form = document.getElementById("filter-aanvraag-form");
+        const downloadButton = document.getElementById("download-aanvraag");
 
-    <script src="script.js"></script>
+        const buildLines = () => {
+          const formData = new FormData(form);
+          const lines = [];
+
+          for (const [key, value] of formData.entries()) {
+            const label = key.replace(/_/g, " ");
+            lines.push(`${label}: ${value}`);
+          }
+
+          return lines;
+        };
+
+        form.addEventListener("submit", (event) => {
+          event.preventDefault();
+
+          if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+          }
+
+          const lines = buildLines();
+          const subject = encodeURIComponent("Filteraanvraag laboratorium");
+          const body = encodeURIComponent(lines.join("\n"));
+          const mailto = `mailto:rico.rappard@buroblauw.nl?subject=${subject}&body=${body}`;
+
+          window.location.href = mailto;
+        });
+
+        downloadButton.addEventListener("click", () => {
+          if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+          }
+
+          const lines = buildLines();
+          const blob = new Blob([lines.join("\n")], { type: "text/plain" });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          const date = new Date().toISOString().slice(0, 10);
+
+          link.href = url;
+          link.download = `filteraanvraag-${date}.txt`;
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+          URL.revokeObjectURL(url);
+        });
+      </script>
+    </main>
   </body>
+</html>
 </html>
