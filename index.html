@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Filteraanvraag - Luchtlaboratorium</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="page__header">
+        <h1>Filteraanvraag</h1>
+        <p>
+          Vul dit formulier in voor een filteraanvraag bij het luchtlaboratorium.
+        </p>
+      </header>
+
+      <form id="filterRequestForm" class="card">
+        <section class="section">
+          <h2>Gegevens opdrachtgever</h2>
+          <div class="grid">
+            <label>
+              Bedrijf
+              <input type="text" name="bedrijf" required />
+            </label>
+            <label>
+              Afdeling
+              <input type="text" name="afdeling" required />
+            </label>
+            <label class="grid__span">
+              Postadres
+              <input type="text" name="postadres" required />
+            </label>
+            <label>
+              Postcode
+              <input type="text" name="postcode" required />
+            </label>
+            <label>
+              Plaats
+              <input type="text" name="plaats" required />
+            </label>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>Meting</h2>
+          <div class="grid">
+            <label>
+              Vermoedelijke datum uitvoering meting
+              <input type="date" name="meting_datum" required />
+            </label>
+            <label>
+              Projectnummer
+              <input type="text" name="projectnummer" required />
+            </label>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>Filterdetails</h2>
+          <div class="grid">
+            <label>
+              Welke filters
+              <select name="filter_type" required>
+                <option value="">Maak een keuze</option>
+                <option value="kwartsvezel">Kwartsvezel</option>
+                <option value="glasvezel">Glasvezel</option>
+                <option value="teflon">Teflon (PTFE)</option>
+                <option value="pvc">PVC</option>
+                <option value="membraan">Membraan</option>
+              </select>
+            </label>
+            <label>
+              Formaat
+              <select name="formaat" required>
+                <option value="">Maak een keuze</option>
+                <option value="25 mm">25 mm</option>
+                <option value="50 mm">50 mm</option>
+              </select>
+            </label>
+            <label>
+              Hoeveelheid
+              <input type="number" name="hoeveelheid" min="1" required />
+            </label>
+            <label class="inline">
+              Voor gewogen
+              <div class="radio-group">
+                <label>
+                  <input type="radio" name="voor_gewogen" value="ja" required />
+                  Ja
+                </label>
+                <label>
+                  <input type="radio" name="voor_gewogen" value="nee" required />
+                  Nee
+                </label>
+              </div>
+            </label>
+            <label>
+              Paraaf aanvrager
+              <input type="text" name="paraaf_aanvrager" required />
+            </label>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>Laborant (invullen na ontvangst)</h2>
+          <div class="grid">
+            <label>
+              Naam
+              <input type="text" name="laborant_naam" />
+            </label>
+            <label>
+              Datum
+              <input type="date" name="laborant_datum" />
+            </label>
+            <label>
+              Paraaf
+              <input type="text" name="laborant_paraaf" />
+            </label>
+            <label class="grid__span">
+              Identificatie opdracht
+              <input type="text" name="opdracht_identificatie" />
+            </label>
+          </div>
+        </section>
+
+        <section class="section section--actions">
+          <button type="button" id="sendEmailButton" class="primary">
+            Verstuur naar laborant
+          </button>
+          <p class="helper">
+            De aanvraag wordt verstuurd naar <strong>luchtlab@buroblauw.nl</strong>.
+          </p>
+        </section>
+      </form>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
