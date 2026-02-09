@@ -34,7 +34,7 @@ const handleSend = () => {
   const body = formatEntries(formData);
   const subject = "Filteraanvraag luchtlaboratorium";
 
-  const mailtoLink = `mailto:luchtlab@buroblauw.nl?subject=${encodeURIComponent(
+  const mailtoLink = `mailto:rico.rappard@buroblauw.nl?subject=${encodeURIComponent(
     subject
   )}&body=${encodeURIComponent(body)}`;
 
